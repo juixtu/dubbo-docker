@@ -2,15 +2,20 @@ version: "2"
 services:
   zookeeper:
     image: 'registry.aliyuncs.com/acs-sample/zookeeper:3.4.8'
-    hostname: zookeeper
+    ports:
+      - 2181:2181    
   producer:
-    image: 'producer:latest'
+    image: 'juixtu/service-producer:v1'
     environment:
-      - ZOOKEEPER_SERVER=zookeeper
+      - ZOOKEEPER_SERVER=[zk地址]
+      - DUBBO_IP_TO_REGISTRY=[需要注册的地址]
+    ports:
+      - 20880:20880
   consumer:
-    image: 'consumer:latest'
+    image: 'juixtu/service-consumer:v1'
     environment:
-      - ZOOKEEPER_SERVER=zookeeper
+      - ZOOKEEPER_SERVER=[zk地址]
+      - DUBBO_IP_TO_REGISTRY=[需要注册的地址]
       - SERVER_PORT=8899
     ports:
       - 8899:8899
